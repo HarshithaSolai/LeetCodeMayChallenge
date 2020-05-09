@@ -22,10 +22,10 @@ var isPerfectSquare = function (num) {
 
   while (begin <= end) {
     mid = Math.floor((begin + end) / 2);
-    if (mid * mid > num) {
-      end = mid - 1;
-    } else if (mid * mid === num) {
+    if (mid * mid === num)  {
       return true;
+    } else if (mid * mid > num) {
+      end = mid - 1;
     } else {
       begin = mid + 1;
     }
