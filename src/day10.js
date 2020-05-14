@@ -1,52 +1,54 @@
-/*
+/* Question 10: Find the Town Judge (May 10 2020)
 
-An image is represented by a 2-D array of integers, each integer representing the pixel value of the image (from 0 to 65535).
+In a town, there are N people labelled from 1 to N.  There is a rumor that one of these people is secretly the town judge.
 
-Given a coordinate (sr, sc) representing the starting pixel (row and column) of the flood fill, and a pixel value newColor, "flood fill" the image.
+If the town judge exists, then:
 
-To perform a "flood fill", consider the starting pixel, plus any pixels connected 4-directionally to the starting pixel of the same color as the starting pixel, plus any pixels connected 4-directionally to those pixels (also with the same color as the starting pixel), and so on. Replace the color of all of the aforementioned pixels with the newColor.
+The town judge trusts nobody.
+Everybody (except for the town judge) trusts the town judge.
+There is exactly one person that satisfies properties 1 and 2.
+You are given trust, an array of pairs trust[i] = [a, b] representing that the person labelled a trusts the person labelled b.
 
-At the end, return the modified image.
+If the town judge exists and can be identified, return the label of the town judge.  Otherwise, return -1.
 
-Input: 
-image = [[1,1,1],[1,1,0],[1,0,1]]
-sr = 1, sc = 1, newColor = 2
-Output: [[2,2,2],[2,2,0],[2,0,1]]
-Explanation: 
-From the center of the image (with position (sr, sc) = (1, 1)), all pixels connected 
-by a path of the same color as the starting pixel are colored with the new color.
-Note the bottom corner is not colored 2, because it is not 4-directionally connected
-to the starting pixel.
+Input: N = 2, trust = [[1,2]]
+Output: 2
 
+Input: N = 3, trust = [[1,3],[2,3]]
+Output: 3
+
+Input: N = 3, trust = [[1,3],[2,3],[3,1]]
+Output: -1
+
+Input: N = 3, trust = [[1,2],[2,3]]
+Output: -1
+
+Input: N = 4, trust = [[1,3],[1,4],[2,3],[2,4],[4,3]]
+Output: 3
+
+1 <= N <= 1000
+trust.length <= 10000
+trust[i] are all different
+trust[i][0] != trust[i][1]
+1 <= trust[i][0], trust[i][1] <= N
 */
 
 /**
- * @param {number[][]} image
- * @param {number} sr
- * @param {number} sc
- * @param {number} newColor
- * @return {number[][]}
+ * @param {number} N
+ * @param {number[][]} trust
+ * @return {number}
  */
-var floodFill = function (image, sr, sc, newColor) {
-  var oldColor = image[sr][sc];
+var findJudge = function (N, trust) {
+  const town = new Array(N + 1).fill(0);
 
-  if (oldColor == newColor) return image
-  image[sr][sc] = newColor;
+  for (let [person1, person2] of trust) {
+    town[person1] -= 1
+    town[person2] += 1
+  }
 
-  const fillColor = function (row, col) {
-    image[row][col] = newColor;
+  for (let i = 1; i < town.length; i++) {
+    if ((N - 1) === town[i]) return i;
+  }
 
-    (image[row - 1] != undefined && image[row - 1][col] == oldColor) && fillColor(row - 1, col);
-    (image[row + 1] != undefined && image[row + 1][col] == oldColor) && fillColor(row + 1, col);
-    (image[row][col - 1] == oldColor) && fillColor(row, col - 1);
-    (image[row][col + 1] == oldColor) && fillColor(row, col + 1);
-  };
-
-  (image[sr - 1] != undefined && image[sr - 1][sc] == oldColor) && fillColor(sr - 1, sc);
-  (image[sr + 1] !== undefined && image[sr + 1][sc] == oldColor) && fillColor(sr + 1, sc);
-  (image[sr][sc - 1] == oldColor) && fillColor(sr, sc - 1);
-  (image[sr][sc + 1] == oldColor) && fillColor(sr, sc + 1);
-
-  return image;
-
+  return -1
 };

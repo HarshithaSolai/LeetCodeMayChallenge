@@ -1,75 +1,30 @@
-/*
+/* Question 12: Single Element in a Sorted Array (May 12 2020)
 
-Implement a trie with insert, search, and startsWith methods.
+You are given a sorted array consisting of only integers where every element appears exactly twice, except for one element which appears exactly once. Find this single element that appears only once.
 
-Trie trie = new Trie();
+Input: [1,1,2,3,3,4,4,8,8]
+Output: 2
 
-trie.insert("apple");
-trie.search("apple");   // returns true
-trie.search("app");     // returns false
-trie.startsWith("app"); // returns true
-trie.insert("app");   
-trie.search("app");     // returns true
-
+Input: [3,3,7,7,10,11,11]
+Output: 10
 */
 
-/**
- * Initialize your data structure here.
- */
-var Trie = function () {
-  this.dict = {};
-};
 
 /**
- * Inserts a word into the trie. 
- * @param {string} word
- * @return {void}
+ * @param {number[]} nums
+ * @return {number}
  */
-Trie.prototype.insert = function (word) {
-  let currword = this.dict;
-  word.split('').forEach((char) => {
-    if (!currword[char]) currword[char] = {};
-    currword = currword[char];
-  })
-  currword.isEnd = true;
-};
-
-/**
- * Returns if the word is in the trie. 
- * @param {string} word
- * @return {boolean}
- */
-Trie.prototype.search = function (word) {
-  let node = this.searchNode(word);
-  return node != null ? node.isEnd == true : false;
-};
-
-/** javaScript
- * Returns if there is any word in the trie that starts with the given prefix. 
- * @param {string} prefix
- * @return {boolean}
- */
-Trie.prototype.startsWith = function (prefix) {
-  let node = this.searchNode(prefix);
-  return node != null;
-};
-
-Trie.prototype.searchNode = function (word) {
-  let currword = this.dict;
-  for (let char of word.split('')) {
-    if (currword[char]) {
-      currword = currword[char]
+var singleNonDuplicate = function (nums) {
+  let start = 0,
+    end = nums.length - 1;
+  while (start < end) {
+    let mid = Math.floor((start + end) / 2);
+    if (mid % 2) mid--;
+    if (nums[mid] === nums[mid + 1]) {
+      start = mid + 2;
     } else {
-      return null;
+      end = mid;
     }
   }
-  return currword;
-}
-
-/** 
- * Your Trie object will be instantiated and called as such:
- * var obj = new Trie()
- * obj.insert(word)
- * var param_2 = obj.search(word)
- * var param_3 = obj.startsWith(prefix)
- */
+  return nums[start];
+};

@@ -1,4 +1,4 @@
-/*
+/* Question 8: Check if it is a Straight Line (May 8 2020)
 You are given an array coordinates, coordinates[i] = [x, y], where [x, y] represents the coordinate of a point.
 Check if these points make a straight line in the XY plane.
 

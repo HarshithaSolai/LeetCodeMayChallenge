@@ -1,4 +1,4 @@
-/* 
+/* Question 5: First Unique Character in String (May 5 2020)
 
 Given a string, find the first non-repeating character in it and return it's index. If it doesn't exist, return -1.
 

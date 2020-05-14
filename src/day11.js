@@ -1,46 +1,52 @@
-/*
+/* Question 10: Flood Fill (May 10 2020)
 
-Given a non-negative integer num represented as a string, remove k digits from the number so that the new number is the smallest possible.
+An image is represented by a 2-D array of integers, each integer representing the pixel value of the image (from 0 to 65535).
 
-Note:
-The length of num is less than 10002 and will be ≥ k.
-The given num does not contain any leading zero.
+Given a coordinate (sr, sc) representing the starting pixel (row and column) of the flood fill, and a pixel value newColor, "flood fill" the image.
 
-Input: num = "1432219", k = 3
-Output: "1219"
-Explanation: Remove the three digits 4, 3, and 2 to form the new number 1219 which is the smallest.
+To perform a "flood fill", consider the starting pixel, plus any pixels connected 4-directionally to the starting pixel of the same color as the starting pixel, plus any pixels connected 4-directionally to those pixels (also with the same color as the starting pixel), and so on. Replace the color of all of the aforementioned pixels with the newColor.
 
+At the end, return the modified image.
 
-Input: num = "10200", k = 1
-Output: "200"
-Explanation: Remove the leading 1 and the number is 200. Note that the output must not contain leading zeroes.
+Input: 
+image = [[1,1,1],[1,1,0],[1,0,1]]
+sr = 1, sc = 1, newColor = 2
+Output: [[2,2,2],[2,2,0],[2,0,1]]
+Explanation: 
+From the center of the image (with position (sr, sc) = (1, 1)), all pixels connected 
+by a path of the same color as the starting pixel are colored with the new color.
+Note the bottom corner is not colored 2, because it is not 4-directionally connected
+to the starting pixel.
 
-Input: num = "10", k = 2
-Output: "0"
-Explanation: Remove all the digits from the number and it is left with nothing which is 0.
 */
 
-
 /**
- * @param {string} num
- * @param {number} k
- * @return {string}
+ * @param {number[][]} image
+ * @param {number} sr
+ * @param {number} sc
+ * @param {number} newColor
+ * @return {number[][]}
  */
-var removeKdigits = function (num, k) {
-  if (k === 0) return num;
-  if (k >= num.length) return "0";
+var floodFill = function (image, sr, sc, newColor) {
+  var oldColor = image[sr][sc];
 
-  var numsArray = num.split(""),
-    n = numsArray.length,
-    result = [];
+  if (oldColor == newColor) return image
+  image[sr][sc] = newColor;
 
-  for (var i = 0; i < n; i++) {
-    while (k > 0 && result.length > 0 && result[result.length - 1] > numsArray[i]) {
-      result.pop();
-      k--;
-    }
-    result.push(numsArray[i]);
-  }
-  result = k > 0 ? result.slice(0, -k) : result;
-  return result.join('').replace(/^0+/, '') || '0';
+  const fillColor = function (row, col) {
+    image[row][col] = newColor;
+
+    (image[row - 1] != undefined && image[row - 1][col] == oldColor) && fillColor(row - 1, col);
+    (image[row + 1] != undefined && image[row + 1][col] == oldColor) && fillColor(row + 1, col);
+    (image[row][col - 1] == oldColor) && fillColor(row, col - 1);
+    (image[row][col + 1] == oldColor) && fillColor(row, col + 1);
+  };
+
+  (image[sr - 1] != undefined && image[sr - 1][sc] == oldColor) && fillColor(sr - 1, sc);
+  (image[sr + 1] !== undefined && image[sr + 1][sc] == oldColor) && fillColor(sr + 1, sc);
+  (image[sr][sc - 1] == oldColor) && fillColor(sr, sc - 1);
+  (image[sr][sc + 1] == oldColor) && fillColor(sr, sc + 1);
+
+  return image;
+
 };
